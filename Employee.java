@@ -36,30 +36,24 @@ public class Employee {
     public String getFullName() {
         return fullName;
     }
+
     public String getPosition() {
         return position;
     }
+
     public String getPhone() {
         return phone;
     }
+
     public int getSalary() {
         return salary;
     }
 
-    public int getAge(){
-        return 2019 -birthYear;
+    public int getAge() {
+        return 2019 - birthYear;
     }
 
-
-    void setChangeSalary(int age, int sum){
-        if (this.getAge() > age) {
-            this.salary = this.salary + sum;
-        }
-
+    void setSalary(int difference) {
+        this.salary = this.salary + difference;
     }
-
-
-
-
-
 }
