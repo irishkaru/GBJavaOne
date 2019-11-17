@@ -75,109 +75,54 @@ public class LessonThree {
         field[y][x] = DOT_AI;
     }
 
-    private static boolean checkDiagonalRight(char c, int x, int y) {
-
-        int count = 0;
+    private static boolean checkArray(char c, int x, int y) {
+        int countDL = 0;
+        int countDR = 0;
+        int countR = 0;
+        int countC = 0;
 
         for (int n = 0; n < numberForWin; n++) {
+            // Проверка диагонали вправо
             if ((x + n < fieldSizeY) && (y + n < fieldSizeX)) {
                 if (field[x + n][y + n] == c)
-                    count += 1;
-                else
-                    break;
-
+                    countDR += 1;
             }
-        }
-
-        if (count >= numberForWin)
-            return true;
-
-        return false;
-
-    }
-
-    private static boolean checkDiagonalLeft(char c, int x, int y) {
-
-        int count = 0;
-
-        for (int n = 0; n < numberForWin; n++) {
+            // Проверка диагонали влево
             if ((x - n >= 0) && (y + n < fieldSizeX)) {
                 if (field[x - n][y + n] == c)
-                    count += 1;
-                 else
-                    break;
-
+                    countDL += 1;
             }
-        }
-
-        if (count >= numberForWin)
-            return true;
-
-        return false;
-    }
-
-
-    //Проверка строк
-    private static boolean checkRows(char c, int x, int y) {
-
-        int count = 0;
-
-        for (int n = 0; n < numberForWin; n++) {
-            if (x + n < fieldSizeY) {
+            // Проверка столбцов
+            if ((x + n < fieldSizeY)) {
                 if (field[x + n][y] == c)
-                    count += 1;
-                else
-                    break;
-
+                    countC += 1;
             }
-        }
-
-        if (count >= numberForWin)
-            return true;
-
-        return false;
-    }
-
-    //Проверка столбцов
-    private static boolean checkColumns(char c, int x, int y) {
-
-        int count = 0;
-
-        for (int n = 0; n < numberForWin; n++) {
-            if  (y + n < fieldSizeX) {
+            // Проверка строк
+            if ((y + n < fieldSizeX)) {
                 if (field[x][y + n] == c)
-                    count += 1;
-                 else
-                    break;
-
+                    countR += 1;
             }
         }
 
-        if (count >= numberForWin)
+        if (countDL >= numberForWin || countDR >= numberForWin || countC >= numberForWin || countR >= numberForWin)
             return true;
 
         return false;
-
     }
 
     private static boolean checkWin(char c) {
 
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < numberForWin; j++) {
-
-                if (checkDiagonalLeft(c, i, j) || checkDiagonalRight(c, i, j) || checkRows(c, i, j) || checkColumns(c, i, j))
-                    return true;
-
+        for (int i = 0; i < fieldSizeY; i++) {
+            for (int j = 0; j < fieldSizeX; j++) {
+                return checkArray(c, i, j);
             }
-
         }
-
         return false;
     }
 
     private static boolean isDraw() {
-        for (int i = 0; i < fieldSizeY; i++) {
-            for (int j = 0; j < fieldSizeX; j++) {
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < numberForWin; j++) {
                 if (field[i][j] == DOT_EMPTY)
                     return false;
             }
