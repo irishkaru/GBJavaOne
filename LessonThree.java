@@ -53,29 +53,55 @@ public class LessonThree {
             System.out.printf("Введите координаты X и Y (от 1 до %d) через %s>>> ", fieldSizeX, "пробел");
             x = SCANNER.nextInt() - 1;
             y = SCANNER.nextInt() - 1;
-        } while (!isValidCell(x, y) || !isEmptyCell(x, y));
+        } while (!isValidCell(y, x) || !isEmptyCell(y, x));
         field[y][x] = DOT_HUMAN;
     }
 
-    private static boolean isValidCell(int x, int y) {
+    private static boolean isValidCell(int y, int x) {
         return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
     }
 
-    private static boolean isEmptyCell(int x, int y) {
+    private static boolean isEmptyCell(int y, int x) {
         return field[y][x] == DOT_EMPTY;
     }
 
     private static void aiTurn() {
+        boolean isCell = false;
+        la: for (int i = 0; i < fieldSizeY; i++) {
+            for (int j = 0; j < fieldSizeX; j++) {
+                if (isEmptyCell(i, j)) {
+
+                    field[i][j] = DOT_AI;
+
+                    if (checkWin(DOT_AI)) {
+                        isCell = true;
+                        break la;
+                    }
+
+                    field[i][j] = DOT_HUMAN;
+
+                    if (checkWin(DOT_HUMAN)) {
+                        field[i][j] = DOT_AI;
+                        isCell = true;
+                        break la;
+                    }
+
+                    field[i][j] = DOT_EMPTY;
+                }
+            }
+        }
         int x;
         int y;
-        do {
-            x = RANDOM.nextInt(fieldSizeX);
-            y = RANDOM.nextInt(fieldSizeY);
-        } while (!isEmptyCell(x, y));
-        field[y][x] = DOT_AI;
+        if (!isCell) {
+            do {
+                x = RANDOM.nextInt(fieldSizeX);
+                y = RANDOM.nextInt(fieldSizeY);
+            } while (!isEmptyCell(y, x));
+            field[y][x] = DOT_AI;
+        }
     }
 
-    private static boolean checkArray(char c, int x, int y) {
+    private static boolean checkArray(char c, int i, int j) {
         int countDL = 0;
         int countDR = 0;
         int countR = 0;
@@ -83,23 +109,23 @@ public class LessonThree {
 
         for (int n = 0; n < numberForWin; n++) {
             // Проверка диагонали вправо
-            if ((x + n < fieldSizeY) && (y + n < fieldSizeX)) {
-                if (field[x + n][y + n] == c)
+            if ((i + n < fieldSizeY) && (j + n < fieldSizeX)) {
+                if (field[i + n][j + n] == c)
                     countDR += 1;
             }
             // Проверка диагонали влево
-            if ((x - n >= 0) && (y + n < fieldSizeX)) {
-                if (field[x - n][y + n] == c)
+            if ((i + n < fieldSizeY) && (j - n >= 0)) {
+                if (field[i + n][j - n] == c)
                     countDL += 1;
             }
             // Проверка столбцов
-            if ((x + n < fieldSizeY)) {
-                if (field[x + n][y] == c)
+            if ((i + n < fieldSizeY)) {
+                if (field[i + n][j] == c)
                     countC += 1;
             }
             // Проверка строк
-            if ((y + n < fieldSizeX)) {
-                if (field[x][y + n] == c)
+            if ((j + n < fieldSizeX)) {
+                if (field[i][j + n] == c)
                     countR += 1;
             }
         }
@@ -112,9 +138,11 @@ public class LessonThree {
 
     private static boolean checkWin(char c) {
 
+
         for (int i = 0; i < fieldSizeY; i++) {
             for (int j = 0; j < fieldSizeX; j++) {
-                return checkArray(c, i, j);
+                if (checkArray(c, i, j))
+                    return true;
             }
         }
         return false;
@@ -155,8 +183,5 @@ public class LessonThree {
                 break;
             }
         }
-
     }
-
-
 }
